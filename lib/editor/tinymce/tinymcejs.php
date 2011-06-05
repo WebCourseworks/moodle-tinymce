@@ -19,9 +19,9 @@ define('MENU_SEPARATOR', '|');
 
 $courseid = empty($COURSE->id) ? 1 : $COURSE->id;
 
-$theme_advanced_buttons = array(array('bold', 'italic', 'underline', 'strikethrough', MENU_SEPARATOR, 'justifyleft', 'justifycenter', 'justifyright', 'justifyfull', MENU_SEPARATOR, 'formatselect', 'fontselect', 'fontsizeselect', MENU_SEPARATOR, 'undo', 'redo'),
-                          array('cut', 'copy', 'paste', 'pastetext', 'pasteword', MENU_SEPARATOR, 'search', 'replace', MENU_SEPARATOR, 'bullist', 'numlist', MENU_SEPARATOR, 'outdent', 'indent', 'blockquote', MENU_SEPARATOR, 'link', 'unlink', 'anchor', 'image', 'cleanup', 'help', 'code', MENU_SEPARATOR, 'insertdate', 'inserttime', 'preview', MENU_SEPARATOR, 'forecolor', 'backcolor'),
-                          array('tablecontrols', MENU_SEPARATOR, 'hr', 'removeformat', 'visualaid', MENU_SEPARATOR, 'sub', 'sup', MENU_SEPARATOR, 'charmap', 'moodlesmileys', 'media', MENU_SEPARATOR, 'ltr', 'rtl', MENU_SEPARATOR, 'fullscreen'));
+$theme_advanced_buttons = array(1 => array('bold', 'italic', 'underline', 'strikethrough', MENU_SEPARATOR, 'justifyleft', 'justifycenter', 'justifyright', 'justifyfull', MENU_SEPARATOR, 'formatselect', 'fontselect', 'fontsizeselect', MENU_SEPARATOR, 'undo', 'redo'),
+                                2 => array('cut', 'copy', 'paste', 'pastetext', 'pasteword', MENU_SEPARATOR, 'search', 'replace', MENU_SEPARATOR, 'bullist', 'numlist', MENU_SEPARATOR, 'outdent', 'indent', 'blockquote', MENU_SEPARATOR, 'link', 'unlink', 'anchor', 'image', 'cleanup', 'help', 'code', MENU_SEPARATOR, 'insertdate', 'inserttime', 'preview', MENU_SEPARATOR, 'forecolor', 'backcolor'),
+                                3 => array('tablecontrols', MENU_SEPARATOR, 'hr', 'removeformat', 'visualaid', MENU_SEPARATOR, 'sub', 'sup', MENU_SEPARATOR, 'charmap', 'moodlesmileys', 'media', MENU_SEPARATOR, 'ltr', 'rtl', MENU_SEPARATOR, 'fullscreen'));
 
 $tinymceplugins = array('safari', 
                         'pagebreak', 
@@ -147,13 +147,19 @@ HTMLArea = function() {
 	    }
     };
 
+	var mergeObjects = function(dest, source) {
+		for (key in source) {
+    		dest[key] = source[key];
+    	}
+
+    	return dest;
+	};
+
     // Merge in supplied arguments.
     if (arguments.length > 1) {
-    	for (arg in arguments[1]) {
-    		config[arg] = arguments[1][arg];
-    	}
+    	config = mergeObjects(config, arguments[1]);
     }
-    
+
     var compileFontList = function(list) {
     	// http://tinymce.moxiecode.com/wiki.php/Configuration:theme_advanced_fonts
     	// http://tinymce.moxiecode.com/wiki.php/Configuration:theme_advanced_font_sizes
@@ -164,13 +170,14 @@ HTMLArea = function() {
     	}
 
     	return results.join(';');
-    }
+    };
 
-    var generate = function() {
-		tinyMCE.init({
-			// Editor selection
-			mode : "exact", 
-			elements : id, 
+    var tinymceinit = function(editorConfig) {
+    	tinyMCE.init(editorConfig);
+    };
+
+    var buildTinymceConfig = function() {
+    	var editorConfig = {
 			// Plugins
 			plugins : "<?php echo implode(',', $tinymceplugins); ?>", 
 			// General config
@@ -181,40 +188,56 @@ HTMLArea = function() {
 			file_browser_callback : 'moodleFileBrowser',
 			// Theme
 			theme : "advanced", 
-			theme_advanced_buttons1 : "<?php echo $theme_advanced_buttons['theme_advanced_buttons1'] ?>", 
-			theme_advanced_buttons2 : "<?php echo $theme_advanced_buttons['theme_advanced_buttons2'] ?>", 
-			theme_advanced_buttons3 : "<?php echo $theme_advanced_buttons['theme_advanced_buttons3'] ?>", 
+			theme_advanced_buttons1 : "<?php echo $theme_advanced_buttons[1] ?>", 
+			theme_advanced_buttons2 : "<?php echo $theme_advanced_buttons[2] ?>", 
+			theme_advanced_buttons3 : "<?php echo $theme_advanced_buttons[3] ?>", 
 	        theme_advanced_toolbar_location : "top", 
 			theme_advanced_toolbar_align : "left", 
 			theme_advanced_statusbar_location : "bottom", 
 			theme_advanced_resizing : true,
 			theme_advanced_fonts : compileFontList(config.fontname),
 			theme_advanced_font_sizes : compileFontList(config.fontsize)
-		});
+		};
+
+		if (arguments.length > 0) {
+			editorConfig = mergeObjects(editorConfig, arguments[0]);
+		}
+		
+		if (config.killWordOnPaste) {
+			editorConfig = mergeObjects(editorConfig, {
+				// Be extremely aggressive when stripping out the word formatting.
+				paste_create_paragraphs : true, 
+				paste_auto_cleanup_on_paste : true, 
+				paste_convert_middot_lists : true, 
+				paste_convert_headers_to_strong : true, 
+				paste_strip_class_attributes : 'all', 
+				paste_retain_style_properties : 'none', 
+				paste_postprocess : function(pl, o) { 
+					tinymce.each(tinyMCE.activeEditor.dom.select('b', o.node), function(node) { 
+						tinyMCE.activeEditor.dom.rename(node, 'strong'); 
+					}); 
+				}
+			});
+		}
+
+    	return editorConfig;
+    };
+
+    var generate = function() {
+    	var editorConfig = buildTinymceConfig({ 
+    		mode : 'exact', 
+    		elements : id 
+    	});
+
+		tinymceinit(editorConfig);
 	};
 
 	var replaceAll = function() {
-		tinyMCE.init({
-			// Editor selection
-			mode : "textareas", 
-			// Plugins
-			plugins : "<?php echo implode(',', $tinymceplugins); ?>", 
-			// General config
-	        convert_urls : false, 
-	        // Browser
-			file_browser_callback : 'moodleFileBrowser', 
-			// Theme options
-			theme : "advanced", 
-			theme_advanced_buttons1 : "<?php echo $theme_advanced_buttons['theme_advanced_buttons1'] ?>", 
-			theme_advanced_buttons2 : "<?php echo $theme_advanced_buttons['theme_advanced_buttons2'] ?>", 
-			theme_advanced_buttons3 : "<?php echo $theme_advanced_buttons['theme_advanced_buttons3'] ?>", 
-	        theme_advanced_toolbar_location : "top", 
-			theme_advanced_toolbar_align : "left", 
-			theme_advanced_statusbar_location : "bottom", 
-			theme_advanced_resizing : true, 
-			theme_advanced_fonts : compileFontList(config.fontname),
-			theme_advanced_font_sizes : compileFontList(config.fontsize)
-		});
+	    var editorConfig = buildTinymceConfig({ 
+    		mode : 'textareas'
+    	});
+
+		tinymceinit(editorConfig);
 	};
 
 	return {
