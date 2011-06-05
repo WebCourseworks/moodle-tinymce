@@ -120,10 +120,10 @@ HTMLArea = function() {
 
     var id = arguments[0];
 
-    // Default config for this area.
+    // Default config (a replica of the HTMLArea config object).
     var config = {
-    	pageStyle : 'body { background-color: #ffffff; }',
-    	killWordOnPaste : true,
+    	pageStyle : 'body { background-color: #ffffff; }', 
+    	killWordOnPaste : true, 
     	fontname : {
     		// This is the default font list from HtmlArea.Config.
     		'Arial'           : 'arial,helvetica,sans-serif',
@@ -134,7 +134,7 @@ HTMLArea = function() {
 	        'Verdana'         : 'verdana,arial,helvetica,sans-serif',
 	        'Impact'          : 'impact',
 	        'WingDings'       : 'wingdings'
-    	},
+    	}, 
     	fontsize : {
     		// This is the default font size list from HtmlArea.Config.
 	        '1 (8 pt)'  : '8pt', 
@@ -147,6 +147,7 @@ HTMLArea = function() {
 	    }
     };
 
+	// A really really basic merge op to merge one object into another.
 	var mergeObjects = function(dest, source) {
 		for (key in source) {
     		dest[key] = source[key];
@@ -155,11 +156,13 @@ HTMLArea = function() {
     	return dest;
 	};
 
-    // Merge in supplied arguments.
+    // Merge in supplied config if provided with one through the constructor.
+    // Otherwise the config will be set by manipulating this.config.
     if (arguments.length > 1) {
     	config = mergeObjects(config, arguments[1]);
     }
 
+	// Compile a list of items into a string that may be passed to theme_avanced_fonts or theme_advanced_font_sizes.
     var compileFontList = function(list) {
     	// http://tinymce.moxiecode.com/wiki.php/Configuration:theme_advanced_fonts
     	// http://tinymce.moxiecode.com/wiki.php/Configuration:theme_advanced_font_sizes
@@ -172,10 +175,12 @@ HTMLArea = function() {
     	return results.join(';');
     };
 
+	// Initialize an instance of TinyMCE given a config.
     var tinymceinit = function(editorConfig) {
     	tinyMCE.init(editorConfig);
     };
 
+	// Construct a configuration object for TinyMCE.
     var buildTinymceConfig = function() {
     	var editorConfig = {
 			// Plugins
@@ -199,10 +204,12 @@ HTMLArea = function() {
 			theme_advanced_font_sizes : compileFontList(config.fontsize)
 		};
 
+		// Merge with an object that may have been passed as an argument.
+		// This should be used to set mode and elements.
 		if (arguments.length > 0) {
 			editorConfig = mergeObjects(editorConfig, arguments[0]);
 		}
-		
+
 		if (config.killWordOnPaste) {
 			editorConfig = mergeObjects(editorConfig, {
 				// Be extremely aggressive when stripping out the word formatting.
