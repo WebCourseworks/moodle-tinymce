@@ -111,173 +111,173 @@ if(!empty($CFG->editorbackgroundcolor)) {
 ?>
 
 HTMLArea = function() {
-	var id;
-	var cfg;
+    var id;
+    var cfg;
 
-	if (arguments.length == 0) {
-		return;
-	}
+    if (arguments.length == 0) {
+        return;
+    }
 
     var id = arguments[0];
 
     // Default config (a replica of the HTMLArea config object).
     var config = {
-    	pageStyle : 'body { background-color: #ffffff; }', 
-    	killWordOnPaste : true, 
-    	fontname : {
-    		// This is the default font list from HtmlArea.Config.
-    		'Arial'           : 'arial,helvetica,sans-serif',
-	        'Courier New'     : 'courier new,courier,monospace',
-	        'Georgia'         : 'georgia,times new roman,times,serif',
-	        'Tahoma'          : 'tahoma,arial,helvetica,sans-serif',
-	        'Times New Roman' : 'times new roman,times,serif',
-	        'Verdana'         : 'verdana,arial,helvetica,sans-serif',
-	        'Impact'          : 'impact',
-	        'WingDings'       : 'wingdings'
-    	}, 
-    	fontsize : {
-    		// This is the default font size list from HtmlArea.Config.
-	        '1 (8 pt)'  : '8pt', 
-	        '2 (10 pt)' : '10pt', 
-	        '3 (12 pt)' : '12pt', 
-	        '4 (14 pt)' : '14pt', 
-	        '5 (18 pt)' : '18pt', 
-	        '6 (24 pt)' : '24pt', 
-	        '7 (36 pt)' : '36pt'
-	    }
+        pageStyle : 'body { background-color: #ffffff; }', 
+        killWordOnPaste : true, 
+        fontname : {
+            // This is the default font list from HtmlArea.Config.
+            'Arial'           : 'arial,helvetica,sans-serif',
+            'Courier New'     : 'courier new,courier,monospace',
+            'Georgia'         : 'georgia,times new roman,times,serif',
+            'Tahoma'          : 'tahoma,arial,helvetica,sans-serif',
+            'Times New Roman' : 'times new roman,times,serif',
+            'Verdana'         : 'verdana,arial,helvetica,sans-serif',
+            'Impact'          : 'impact',
+            'WingDings'       : 'wingdings'
+        }, 
+        fontsize : {
+            // This is the default font size list from HtmlArea.Config.
+            '1 (8 pt)'  : '8pt', 
+            '2 (10 pt)' : '10pt', 
+            '3 (12 pt)' : '12pt', 
+            '4 (14 pt)' : '14pt', 
+            '5 (18 pt)' : '18pt', 
+            '6 (24 pt)' : '24pt', 
+            '7 (36 pt)' : '36pt'
+        }
     };
 
-	// A really really basic merge op to merge one object into another.
-	var mergeObjects = function(dest, source) {
-		for (key in source) {
-    		dest[key] = source[key];
-    	}
+    // A really really basic merge op to merge one object into another.
+    var mergeObjects = function(dest, source) {
+        for (key in source) {
+            dest[key] = source[key];
+        }
 
-    	return dest;
-	};
+        return dest;
+    };
 
     // Merge in supplied config if provided with one through the constructor.
     // Otherwise the config will be set by manipulating this.config.
     if (arguments.length > 1) {
-    	config = mergeObjects(config, arguments[1]);
+        config = mergeObjects(config, arguments[1]);
     }
 
-	// Compile a list of items into a string that may be passed to theme_avanced_fonts or theme_advanced_font_sizes.
+    // Compile a list of items into a string that may be passed to theme_avanced_fonts or theme_advanced_font_sizes.
     var compileFontList = function(list) {
-    	// http://tinymce.moxiecode.com/wiki.php/Configuration:theme_advanced_fonts
-    	// http://tinymce.moxiecode.com/wiki.php/Configuration:theme_advanced_font_sizes
-    	var results = [];
+        // http://tinymce.moxiecode.com/wiki.php/Configuration:theme_advanced_fonts
+        // http://tinymce.moxiecode.com/wiki.php/Configuration:theme_advanced_font_sizes
+        var results = [];
 
-    	for(item in list) {
-    		results.push(item + '=' + list[item]);
-    	}
+        for(item in list) {
+            results.push(item + '=' + list[item]);
+        }
 
-    	return results.join(';');
+        return results.join(';');
     };
 
-	// Initialize an instance of TinyMCE given a config.
+    // Initialize an instance of TinyMCE given a config.
     var tinymceinit = function(editorConfig) {
-    	tinyMCE.init(editorConfig);
+        tinyMCE.init(editorConfig);
     };
 
-	// Construct a configuration object for TinyMCE.
+    // Construct a configuration object for TinyMCE.
     var buildTinymceConfig = function() {
-    	var editorConfig = {
-			// Plugins
-			plugins : "<?php echo implode(',', $tinymceplugins); ?>", 
-			// General config
-	        convert_urls : false, 
-	        add_form_submit_trigger : true, 
-			add_unload_trigger : true, 
-	        // Browser
-			file_browser_callback : 'moodleFileBrowser',
-			// Theme
-			theme : "advanced", 
-			theme_advanced_buttons1 : "<?php echo $theme_advanced_buttons[1] ?>", 
-			theme_advanced_buttons2 : "<?php echo $theme_advanced_buttons[2] ?>", 
-			theme_advanced_buttons3 : "<?php echo $theme_advanced_buttons[3] ?>", 
-	        theme_advanced_toolbar_location : "top", 
-			theme_advanced_toolbar_align : "left", 
-			theme_advanced_statusbar_location : "bottom", 
-			theme_advanced_resizing : true,
-			theme_advanced_fonts : compileFontList(config.fontname),
-			theme_advanced_font_sizes : compileFontList(config.fontsize)
-		};
+        var editorConfig = {
+            // Plugins
+            plugins : "<?php echo implode(',', $tinymceplugins); ?>", 
+            // General config
+            convert_urls : false, 
+            add_form_submit_trigger : true, 
+            add_unload_trigger : true, 
+            // Browser
+            file_browser_callback : 'moodleFileBrowser',
+            // Theme
+            theme : "advanced", 
+            theme_advanced_buttons1 : "<?php echo $theme_advanced_buttons[1] ?>", 
+            theme_advanced_buttons2 : "<?php echo $theme_advanced_buttons[2] ?>", 
+            theme_advanced_buttons3 : "<?php echo $theme_advanced_buttons[3] ?>", 
+            theme_advanced_toolbar_location : "top", 
+            theme_advanced_toolbar_align : "left", 
+            theme_advanced_statusbar_location : "bottom", 
+            theme_advanced_resizing : true,
+            theme_advanced_fonts : compileFontList(config.fontname),
+            theme_advanced_font_sizes : compileFontList(config.fontsize)
+        };
 
-		// Merge with an object that may have been passed as an argument.
-		// This should be used to set mode and elements.
-		if (arguments.length > 0) {
-			editorConfig = mergeObjects(editorConfig, arguments[0]);
-		}
+        // Merge with an object that may have been passed as an argument.
+        // This should be used to set mode and elements.
+        if (arguments.length > 0) {
+            editorConfig = mergeObjects(editorConfig, arguments[0]);
+        }
 
-		if (config.killWordOnPaste) {
-			editorConfig = mergeObjects(editorConfig, {
-				// Be extremely aggressive when stripping out the word formatting.
-				paste_create_paragraphs : true, 
-				paste_auto_cleanup_on_paste : true, 
-				paste_convert_middot_lists : true, 
-				paste_convert_headers_to_strong : true, 
-				paste_strip_class_attributes : 'all', 
-				paste_retain_style_properties : 'none', 
-				paste_postprocess : function(pl, o) { 
-					tinymce.each(tinyMCE.activeEditor.dom.select('b', o.node), function(node) { 
-						tinyMCE.activeEditor.dom.rename(node, 'strong'); 
-					}); 
-				}
-			});
-		}
+        if (config.killWordOnPaste) {
+            editorConfig = mergeObjects(editorConfig, {
+                // Be extremely aggressive when stripping out the word formatting.
+                paste_create_paragraphs : true, 
+                paste_auto_cleanup_on_paste : true, 
+                paste_convert_middot_lists : true, 
+                paste_convert_headers_to_strong : true, 
+                paste_strip_class_attributes : 'all', 
+                paste_retain_style_properties : 'none', 
+                paste_postprocess : function(pl, o) { 
+                    tinymce.each(tinyMCE.activeEditor.dom.select('b', o.node), function(node) { 
+                        tinyMCE.activeEditor.dom.rename(node, 'strong'); 
+                    }); 
+                }
+            });
+        }
 
-    	return editorConfig;
+        return editorConfig;
     };
 
     var generate = function() {
-    	var editorConfig = buildTinymceConfig({ 
-    		mode : 'exact', 
-    		elements : id 
-    	});
+        var editorConfig = buildTinymceConfig({ 
+            mode : 'exact', 
+            elements : id 
+        });
 
-		tinymceinit(editorConfig);
-	};
+        tinymceinit(editorConfig);
+    };
 
-	var replaceAll = function() {
-	    var editorConfig = buildTinymceConfig({ 
-    		mode : 'textareas'
-    	});
+    var replaceAll = function() {
+        var editorConfig = buildTinymceConfig({ 
+            mode : 'textareas'
+        });
 
-		tinymceinit(editorConfig);
-	};
+        tinymceinit(editorConfig);
+    };
 
-	return {
-		generate : function() { return generate(); },
-		replaceAll : function() { return replaceAll(); },
-		config : config
-	}
+    return {
+        generate : function() { return generate(); },
+        replaceAll : function() { return replaceAll(); },
+        config : config
+    }
 };
 
 function moodleFileBrowser (field_name, url, type, win) {
-	var cmsURL = '', 
-	    width = 0, 
-	    height = 0,
-	    courseid = <?php  echo $courseid; ?>;
+    var cmsURL = '', 
+        width = 0, 
+        height = 0,
+        courseid = <?php  echo $courseid; ?>;
 
     switch(type) {
-    	default:
-    	case 'file':
-			cmsURL = '<?php echo $CFG->httpswwwroot; ?>/lib/editor/link.php';
-			width = 480;
-			height = 400;
-			break;
-		case 'image':
-			cmsURL = '<?php echo $CFG->httpswwwroot; ?>/lib/editor/insert_image.php';
-			width = 736;
-			height = 430;
-			break;
-		case 'media':
-			cmsURL = '<?php echo $CFG->httpswwwroot; ?>/lib/editor/insert_image.php';
-			width = 736;
-			height = 430;
-			break;
-	}
+        default:
+        case 'file':
+            cmsURL = '<?php echo $CFG->httpswwwroot; ?>/lib/editor/link.php';
+            width = 480;
+            height = 400;
+            break;
+        case 'image':
+            cmsURL = '<?php echo $CFG->httpswwwroot; ?>/lib/editor/insert_image.php';
+            width = 736;
+            height = 430;
+            break;
+        case 'media':
+            cmsURL = '<?php echo $CFG->httpswwwroot; ?>/lib/editor/insert_image.php';
+            width = 736;
+            height = 430;
+            break;
+    }
 
     tinyMCE.activeEditor.windowManager.open({
         file : cmsURL + "?id=" + courseid,
