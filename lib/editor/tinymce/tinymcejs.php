@@ -5,7 +5,7 @@ require_once('../../../config.php');
 global $CFG; 
 
 /* Uncomment after dev, before qa.
-$lastmodified = filemtime("htmlarea.php");
+$lastmodified = filemtime(__FILE__);
 $lifetime = 1800;
 
 header("Content-type: application/x-javascript; charset: utf-8");  // Correct MIME type
@@ -17,7 +17,7 @@ header("Pragma: ");
 
 define('MENU_SEPARATOR', '|');
 
-$courseid = empty($COURSE->id) ? 1 : $COURSE->id;
+$courseid = optional_param('id', SITEID, PARAM_INT);
 
 $theme_advanced_buttons = array(1 => array('bold', 'italic', 'underline', 'strikethrough', MENU_SEPARATOR, 'justifyleft', 'justifycenter', 'justifyright', 'justifyfull', MENU_SEPARATOR, 'formatselect', 'fontselect', 'fontsizeselect', MENU_SEPARATOR, 'undo', 'redo'),
                                 2 => array('cut', 'copy', 'paste', 'pastetext', 'pasteword', MENU_SEPARATOR, 'search', 'replace', MENU_SEPARATOR, 'bullist', 'numlist', MENU_SEPARATOR, 'outdent', 'indent', 'blockquote', MENU_SEPARATOR, 'link', 'unlink', 'anchor', 'image', 'cleanup', 'help', 'code', MENU_SEPARATOR, 'insertdate', 'inserttime', 'preview', MENU_SEPARATOR, 'forecolor', 'backcolor'),
@@ -232,7 +232,7 @@ HTMLArea = function() {
 
     var generate = function() {
         var editorConfig = buildTinymceConfig({ 
-            mode : 'exact', 
+            mode     : 'exact', 
             elements : id 
         });
 
@@ -248,48 +248,47 @@ HTMLArea = function() {
     };
 
     return {
-        generate : function() { return generate(); },
+        generate   : function() { return generate(); },
         replaceAll : function() { return replaceAll(); },
-        config : config
+        config     : config
     }
 };
 
 function moodleFileBrowser (field_name, url, type, win) {
     var cmsURL = '', 
         width = 0, 
-        height = 0,
-        courseid = <?php  echo $courseid; ?>;
+        height = 0;
 
     switch(type) {
         default:
         case 'file':
-            cmsURL = '<?php echo $CFG->httpswwwroot; ?>/lib/editor/link.php';
+            cmsURL = '<?php echo "{$CFG->httpswwwroot}/lib/editor/tinymce/link.php?id={$courseid}"; ?>';
             width = 480;
             height = 400;
             break;
         case 'image':
-            cmsURL = '<?php echo $CFG->httpswwwroot; ?>/lib/editor/insert_image.php';
+            cmsURL = '<?php echo "{$CFG->httpswwwroot}/lib/editor/tinymce/insert_image.php?id={$courseid}"; ?>';
             width = 736;
             height = 430;
             break;
         case 'media':
-            cmsURL = '<?php echo $CFG->httpswwwroot; ?>/lib/editor/insert_image.php';
+            cmsURL = '<?php echo "{$CFG->httpswwwroot}/lib/editor/tinymce/insert_image.php?id={$courseid}"; ?>';
             width = 736;
             height = 430;
             break;
     }
 
     tinyMCE.activeEditor.windowManager.open({
-        file : cmsURL + "?id=" + courseid,
-        width : width,  
-        height : height,
-        resizable : "yes",
-        inline : "yes",  // This parameter only has an effect if you use the inlinepopups plugin!
-        close_previous : "no"
+        file           : cmsURL,
+        width          : width,  
+        height         : height,
+        resizable      : 'yes',
+        inline         : 'yes',  // This parameter only has an effect if you use the inlinepopups plugin!
+        close_previous : 'no'
     }, {
-        window : win,
-        input : field_name
+        window         : win,
+        input          : field_name
     });
 
     return false;
-  }
+}
