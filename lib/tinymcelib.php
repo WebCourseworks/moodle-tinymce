@@ -58,7 +58,7 @@ class TinyMCEScriptIterator implements ArrayAccess, Iterator   {
     }
     
     private function getscript($index) {
-        global $CFG, $COURSE;
+        global $CFG, $COURSE, $HTTPSPAGEREQUIRED;
 
         $result = null;
 
@@ -67,7 +67,8 @@ class TinyMCEScriptIterator implements ArrayAccess, Iterator   {
                 $result = "{$CFG->httpswwwroot}/lib/editor/tinymce/jscripts/tiny_mce/tiny_mce.js";
                 break;
             case 1:
-                $result = "{$CFG->httpswwwroot}/lib/editor/tinymce/tinymcejs.php?id={$COURSE->id}";
+                $httpsrequired = empty($HTTPSPAGEREQUIRED) ? '' : '&amp;httpsrequired=1';
+                $result = "{$CFG->httpswwwroot}/lib/editor/tinymce/tinymcejs.php?id={$COURSE->id}{$httpsrequired}";
                 break;
         }
 
