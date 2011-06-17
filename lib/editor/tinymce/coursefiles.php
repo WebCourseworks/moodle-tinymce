@@ -721,7 +721,7 @@ function displaydir ($wdir) {
             echo "<tr>";
 
             if ($usecheckboxes) {
-                if ($fileurl === '/moddata' || is_public_directory($filename)) {
+                if ($fileurl === '/moddata') {
                     print_cell();
                 } else {
                     print_cell("center", "<input type=\"checkbox\" name=\"file$count\" value=\"$fileurl\" onclick=\"return set_rename('$dir');\" />");

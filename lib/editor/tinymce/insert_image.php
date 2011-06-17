@@ -19,7 +19,7 @@
 <meta http-equiv="content-type" content="text/html; charset=utf-8" />
 <title><?php print_string("insertimage","editor");?></title>
 <script type="text/javascript" src="popup.js"></script>
-<script language="javascript" type="text/javascript" src="tiny_mce_popup.js"></script>
+<script language="javascript" type="text/javascript" src="jscripts/tiny_mce/tiny_mce_popup.js"></script>
 <script type="text/javascript">
 var FileBrowserDialogue = {
     moodleSubmit : function () {
@@ -195,7 +195,7 @@ form { margin-bottom: 0px; margin-top: 0px; }
       <td width="55%" valign="top"><?php
           print_string("filebrowser","editor");
           echo "<br />";
-          echo "<iframe id=\"ibrowser\" name=\"ibrowser\" src=\"{$CFG->httpswwwroot}/lib/editor/tiny_mce/coursefiles.php?usecheckboxes=1&id=$id\" style=\"width: 100%; height: 200px;\"></iframe>";
+          echo "<iframe id=\"ibrowser\" name=\"ibrowser\" src=\"{$CFG->httpswwwroot}/lib/editor/tinymce/coursefiles.php?usecheckboxes=1&id=$id\" style=\"width: 100%; height: 200px;\"></iframe>";
       ?>
       </td>
       <td width="45%" valign="top"><?php print_string("preview","editor");?>:<br />
