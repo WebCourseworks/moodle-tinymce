@@ -189,6 +189,14 @@ HTMLArea = function() {
             convert_urls : false, 
             add_form_submit_trigger : true, 
             add_unload_trigger : true, 
+
+			// No inline styles
+			apply_source_formatting : false,
+			cleanup : false, 
+			verify_html : false,
+			verify_css_classes : false,
+			fix_list_elements : true,
+			
             // Browser
             file_browser_callback : 'moodleFileBrowser',
             // Theme
