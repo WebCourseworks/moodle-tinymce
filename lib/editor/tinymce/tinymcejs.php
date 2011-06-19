@@ -4,7 +4,6 @@ require_once('../../../config.php');
 
 global $CFG; 
 
-/* Uncomment after dev, before qa.
 $lastmodified = filemtime(__FILE__);
 $lifetime = 1800;
 
@@ -13,7 +12,6 @@ header("Last-Modified: " . gmdate("D, d M Y H:i:s", $lastmodified) . " GMT");
 header("Expires: " . gmdate("D, d M Y H:i:s", time() + $lifetime) . " GMT");
 header("Cache-control: max_age = $lifetime");
 header("Pragma: ");
-*/
 
 define('MENU_SEPARATOR', '|');
 
