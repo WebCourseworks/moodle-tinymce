@@ -17,7 +17,7 @@ header("Pragma: ");
 
 define('MENU_SEPARATOR', '|');
 
-$courseid = optional_param('id', SITEID, PARAM_INT);
+$courseid = optional_param('id', 0, PARAM_INT);
 
 $theme_advanced_buttons = array(1 => array('bold', 'italic', 'underline', 'strikethrough', MENU_SEPARATOR, 'justifyleft', 'justifycenter', 'justifyright', 'justifyfull', MENU_SEPARATOR, 'formatselect', 'fontselect', 'fontsizeselect', MENU_SEPARATOR, 'undo', 'redo'),
                                 2 => array('cut', 'copy', 'paste', 'pastetext', 'pasteword', MENU_SEPARATOR, 'search', 'replace', MENU_SEPARATOR, 'bullist', 'numlist', MENU_SEPARATOR, 'outdent', 'indent', 'blockquote', MENU_SEPARATOR, 'link', 'unlink', 'anchor', 'image', 'cleanup', 'help', 'code', MENU_SEPARATOR, 'insertdate', 'inserttime', 'preview', MENU_SEPARATOR, 'forecolor', 'backcolor'),
@@ -196,9 +196,10 @@ HTMLArea = function() {
 			verify_html : false,
 			verify_css_classes : false,
 			fix_list_elements : true,
-			
+<?php if (!empty($courseid)) { ?>
             // Browser
             file_browser_callback : 'moodleFileBrowser',
+<?php } ?>
             // Theme
             theme : "advanced", 
             theme_advanced_buttons1 : "<?php echo $theme_advanced_buttons[1] ?>", 

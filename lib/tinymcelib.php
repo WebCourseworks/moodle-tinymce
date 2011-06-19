@@ -67,8 +67,14 @@ class TinyMCEScriptIterator implements ArrayAccess, Iterator   {
                 $result = "{$CFG->httpswwwroot}/lib/editor/tinymce/jscripts/tiny_mce/tiny_mce.js";
                 break;
             case 1:
-                $httpsrequired = empty($HTTPSPAGEREQUIRED) ? '' : '&amp;httpsrequired=1';
-                $result = "{$CFG->httpswwwroot}/lib/editor/tinymce/tinymcejs.php?id={$COURSE->id}{$httpsrequired}";
+                $courseid = $COURSE->id;
+                if (!empty($courseid) and has_capability('moodle/course:managefiles', get_context_instance(CONTEXT_COURSE, $courseid))) {
+                    $httpsrequired = empty($HTTPSPAGEREQUIRED) ? '' : '&amp;httpsrequired=1';
+                    $result = "{$CFG->httpswwwroot}/lib/editor/tinymce/tinymcejs.php?id={$courseid}{$httpsrequired}";
+                } else {
+                    $httpsrequired = empty($HTTPSPAGEREQUIRED) ? '' : '?httpsrequired=1';
+                    $result = "{$CFG->httpswwwroot}/lib/editor/tinymce/tinymcejs.php{$httpsrequired}";
+                }
                 break;
         }
 
