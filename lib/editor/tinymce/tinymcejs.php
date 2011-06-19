@@ -147,7 +147,7 @@ HTMLArea = function() {
 
     // A really really basic merge op to merge one object into another.
     var mergeObjects = function(dest, source) {
-        for (key in source) {
+        for (var key in source) {
             dest[key] = source[key];
         }
 
@@ -166,7 +166,7 @@ HTMLArea = function() {
         // http://tinymce.moxiecode.com/wiki.php/Configuration:theme_advanced_font_sizes
         var results = [];
 
-        for(item in list) {
+        for (var item in list) {
             results.push(item + '=' + list[item]);
         }
 
