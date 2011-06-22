@@ -19,3 +19,11 @@ Add the following two lines of code to /lib/setup.php before the ?> at the end o
 // THIS MUST BE INCLUDED FOR TINYMCE TO WORK CORRECTLY.
 require_once("{$CFG->libdir}/tinymcelib.php");
 ```
+
+Known Issues
+============
+
+TinyMCE is incompatible with the following Moodle customizations:
+
+* NanoGong
+* [HTMLAREA Editor custom plugin framework support](http://tracker.moodle.org/browse/CONTRIB-2730)
