@@ -187,7 +187,9 @@ HTMLArea = function() {
             convert_urls : false, 
             add_form_submit_trigger : true, 
             add_unload_trigger : true, 
-
+            // HTMLArea did not encode many entites.  Default to 'raw' entity encoding.
+            // 'raw' entity encoding will try to include the additional apos entity, no nice way to stop that however.
+            entity_encoding: '<?php echo !empty($CFG->tinymce_entity_encoding) ? addslashes($CFG->tinymce_entity_encoding) : 'raw'; ?>',
 			// No inline styles
 			apply_source_formatting : false,
 			cleanup : false, 
