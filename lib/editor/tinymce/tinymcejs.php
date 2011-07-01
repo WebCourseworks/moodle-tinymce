@@ -109,17 +109,14 @@ if(!empty($CFG->editorbackgroundcolor)) {
 ?>
 
 HTMLArea = function() {
-    var id;
-    var cfg;
-
     if (arguments.length == 0) {
         return;
     }
 
-    var id = arguments[0];
+    this.id = arguments[0];
 
     // Default config (a replica of the HTMLArea config object).
-    var config = {
+    this.config = {
         pageStyle : 'body { background-color: #ffffff; }', 
         killWordOnPaste : true, 
         fontname : {
@@ -145,124 +142,119 @@ HTMLArea = function() {
         }
     };
 
-    // A really really basic merge op to merge one object into another.
-    var mergeObjects = function(dest, source) {
-        for (var key in source) {
-            dest[key] = source[key];
-        }
-
-        return dest;
-    };
-
     // Merge in supplied config if provided with one through the constructor.
     // Otherwise the config will be set by manipulating this.config.
     if (arguments.length > 1) {
-        config = mergeObjects(config, arguments[1]);
-    }
-
-    // Compile a list of items into a string that may be passed to theme_avanced_fonts or theme_advanced_font_sizes.
-    var compileFontList = function(list) {
-        // http://tinymce.moxiecode.com/wiki.php/Configuration:theme_advanced_fonts
-        // http://tinymce.moxiecode.com/wiki.php/Configuration:theme_advanced_font_sizes
-        var results = [];
-
-        for (var item in list) {
-            results.push(item + '=' + list[item]);
-        }
-
-        return results.join(';');
-    };
-
-    // Initialize an instance of TinyMCE given a config.
-    var tinymceinit = function(editorConfig) {
-        tinyMCE.init(editorConfig);
-    };
-
-    // Construct a configuration object for TinyMCE.
-    var buildTinymceConfig = function() {
-        var editorConfig = {
-            // Plugins
-            plugins : "<?php echo implode(',', $tinymceplugins); ?>", 
-            // General config
-            convert_urls : false, 
-            add_form_submit_trigger : true, 
-            add_unload_trigger : true, 
-            // HTMLArea did not encode many entites.  Default to 'raw' entity encoding.
-            // 'raw' entity encoding will try to include the additional apos entity, no nice way to stop that however.
-            entity_encoding: '<?php echo !empty($CFG->tinymce_entity_encoding) ? addslashes($CFG->tinymce_entity_encoding) : 'raw'; ?>',
-			// No inline styles
-			apply_source_formatting : false,
-			cleanup : false, 
-			verify_html : false,
-			verify_css_classes : false,
-			fix_list_elements : true,
-<?php if (!empty($courseid)) { ?>
-            // Browser
-            file_browser_callback : 'moodleFileBrowser',
-<?php } ?>
-            // Theme
-            theme : "advanced", 
-            theme_advanced_buttons1 : "<?php echo $theme_advanced_buttons[1] ?>", 
-            theme_advanced_buttons2 : "<?php echo $theme_advanced_buttons[2] ?>", 
-            theme_advanced_buttons3 : "<?php echo $theme_advanced_buttons[3] ?>", 
-            theme_advanced_toolbar_location : "top", 
-            theme_advanced_toolbar_align : "left", 
-            theme_advanced_statusbar_location : "bottom", 
-            theme_advanced_resizing : true,
-            theme_advanced_fonts : compileFontList(config.fontname),
-            theme_advanced_font_sizes : compileFontList(config.fontsize)
-        };
-
-        // Merge with an object that may have been passed as an argument.
-        // This should be used to set mode and elements.
-        if (arguments.length > 0) {
-            editorConfig = mergeObjects(editorConfig, arguments[0]);
-        }
-
-        if (config.killWordOnPaste) {
-            editorConfig = mergeObjects(editorConfig, {
-                // Be extremely aggressive when stripping out the word formatting.
-                paste_create_paragraphs : true, 
-                paste_auto_cleanup_on_paste : true, 
-                paste_convert_middot_lists : true, 
-                paste_convert_headers_to_strong : true, 
-                paste_strip_class_attributes : 'all', 
-                paste_retain_style_properties : 'none', 
-                paste_postprocess : function(pl, o) { 
-                    tinymce.each(tinyMCE.activeEditor.dom.select('b', o.node), function(node) { 
-                        tinyMCE.activeEditor.dom.rename(node, 'strong'); 
-                    }); 
-                }
-            });
-        }
-
-        return editorConfig;
-    };
-
-    var generate = function() {
-        var editorConfig = buildTinymceConfig({ 
-            mode     : 'exact', 
-            elements : id 
-        });
-
-        tinymceinit(editorConfig);
-    };
-
-    var replaceAll = function() {
-        var editorConfig = buildTinymceConfig({ 
-            mode : 'textareas'
-        });
-
-        tinymceinit(editorConfig);
-    };
-
-    return {
-        generate   : function() { return generate(); },
-        replaceAll : function() { return replaceAll(); },
-        config     : config
+        config = this._mergeObjects(config, arguments[1]);
     }
 };
 
+// A really really basic merge op to merge one object into another.
+HTMLArea._mergeObjects = function(dest, source) {
+    for (var key in source) {
+        dest[key] = source[key];
+    }
+
+    return dest;
+};
+
+// Compile a list of items into a string that may be passed to theme_avanced_fonts or theme_advanced_font_sizes.
+HTMLArea._compileFontList = function(list) {
+    // http://tinymce.moxiecode.com/wiki.php/Configuration:theme_advanced_fonts
+    // http://tinymce.moxiecode.com/wiki.php/Configuration:theme_advanced_font_sizes
+    var results = [];
+
+    for (var item in list) {
+        results.push(item + '=' + list[item]);
+    }
+
+    return results.join(';');
+};
+
+// Construct a configuration object for TinyMCE.
+HTMLArea._buildTinymceConfig = function(areaConfig, overrides) {
+	areaConfig = areaConfig || config;
+    var editorConfig = {
+        // Plugins
+        plugins : "<?php echo implode(',', $tinymceplugins); ?>", 
+        // General config
+        convert_urls : false, 
+        add_form_submit_trigger : true, 
+        add_unload_trigger : true, 
+        // HTMLArea did not encode many entites.  Default to 'raw' entity encoding.
+        // 'raw' entity encoding will try to include the additional apos entity, no nice way to stop that however.
+        entity_encoding: '<?php echo !empty($CFG->tinymce_entity_encoding) ? addslashes($CFG->tinymce_entity_encoding) : 'raw'; ?>',
+		// No inline styles
+		apply_source_formatting : false,
+		cleanup : false, 
+		verify_html : false,
+		verify_css_classes : false,
+		fix_list_elements : true,
+<?php if (!empty($courseid)) { ?>
+        // Browser
+        file_browser_callback : 'moodleFileBrowser',
+<?php } ?>
+        // Theme
+        theme : "advanced", 
+        theme_advanced_buttons1 : "<?php echo $theme_advanced_buttons[1] ?>", 
+        theme_advanced_buttons2 : "<?php echo $theme_advanced_buttons[2] ?>", 
+        theme_advanced_buttons3 : "<?php echo $theme_advanced_buttons[3] ?>", 
+        theme_advanced_toolbar_location : "top", 
+        theme_advanced_toolbar_align : "left", 
+        theme_advanced_statusbar_location : "bottom", 
+        theme_advanced_resizing : true,
+        theme_advanced_fonts : this._compileFontList(areaConfig.fontname),
+        theme_advanced_font_sizes : this._compileFontList(areaConfig.fontsize)
+    };
+
+    // Merge with an object that may have been passed as an argument.
+    // This should be used to set mode and elements.
+    if (overrides) {
+        editorConfig = this._mergeObjects(editorConfig, overrides);
+    }
+
+    if (areaConfig.killWordOnPaste) {
+        editorConfig = this._mergeObjects(editorConfig, {
+            // Be extremely aggressive when stripping out the word formatting.
+            paste_create_paragraphs : true, 
+            paste_auto_cleanup_on_paste : true, 
+            paste_convert_middot_lists : true, 
+            paste_convert_headers_to_strong : true, 
+            paste_strip_class_attributes : 'all', 
+            paste_retain_style_properties : 'none', 
+            paste_postprocess : function(pl, o) { 
+                tinymce.each(tinyMCE.activeEditor.dom.select('b', o.node), function(node) { 
+                    tinyMCE.activeEditor.dom.rename(node, 'strong'); 
+                }); 
+            }
+        });
+    }
+
+    return editorConfig;
+};
+
+// Initialize an instance of TinyMCE given a config.
+HTMLArea._tinymceinit = function(editorConfig) {
+    tinyMCE.init(editorConfig);
+};
+
+HTMLArea.prototype.generate = function() {
+    var editorConfig = HTMLArea._buildTinymceConfig(this.config, { 
+        mode     : 'exact', 
+        elements : this.id 
+    });
+
+    HTMLArea._tinymceinit(editorConfig);
+};
+
+HTMLArea.replaceAll = function(areaConfig) {
+    var editorConfig = this._buildTinymceConfig(areaConfig, { 
+        mode : 'textareas'
+    });
+
+    this._tinymceinit(editorConfig);
+};
+ 
 function moodleFileBrowser (field_name, url, type, win) {
     var cmsURL = '', 
         width = 0, 
