@@ -65,6 +65,18 @@
 
             try {
                 if(insimg != null) {
+                    var imageOnly = false;
+                    try {
+                        // This will only go OK if we're on the same domain.
+                        imageOnly = /insert_image\.php/.test(window.parent.location.href);
+                    } catch(err) {
+                    }
+                    if (imageOnly) {
+                        if(params.itype.indexOf("image/gif") == -1 && params.itype.indexOf("image/jpeg") == -1 && params.itype.indexOf("image/png") == -1) {
+                            alert("<?php print_string("notimage","editor");?>");
+                            return false;
+                        }
+                    }
                     for(field in params) {
                         var value = params[field];
                         switch(field) {
