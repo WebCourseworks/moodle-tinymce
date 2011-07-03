@@ -236,6 +236,7 @@ HTMLArea._buildTinymceConfig = function(areaConfig, overrides) {
 // Initialize an instance of TinyMCE given a config.
 HTMLArea._tinymceinit = function(editorConfig) {
     tinyMCE.init(editorConfig);
+    HTMLArea._hookSubmit();
 };
 
 HTMLArea.prototype.generate = function() {
@@ -253,6 +254,24 @@ HTMLArea.replaceAll = function(areaConfig) {
     });
 
     this._tinymceinit(editorConfig);
+};
+
+HTMLArea._hasHookedSubmit = false;
+HTMLArea._hookSubmit = function() {
+	if (HTMLArea._hasHookedSubmit) {
+		return;
+	}
+	
+	tinymce.dom.Event.add(window, 'load', function() {
+		var domutils = new tinymce.dom.DOMUtils(document);
+		tinymce.each(domutils.select('input[type=\'submit\']'), function(button) {
+			tinymce.dom.Event.add(button, 'click', function() {
+				tinyMCE.triggerSave();
+			});
+		});
+    });
+
+	HTMLArea._hasHookedSubmit = true;
 };
  
 function moodleFileBrowser (field_name, url, type, win) {
