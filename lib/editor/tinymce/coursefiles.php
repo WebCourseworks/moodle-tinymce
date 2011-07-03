@@ -94,8 +94,8 @@
                 }
             } catch(e) {
                 if ( window.tinyMCE != "undefined" || window.TinyMCE != "undefined" ) {
-                    upper.opener.Dialog._return(params.url);
-                    upper.close();
+                    //upper.opener.Dialog._return(params.url);
+                    //upper.close();
                 } else {
                     alert("Something odd just occurred!!!");
                 }
