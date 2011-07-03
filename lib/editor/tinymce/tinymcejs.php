@@ -263,16 +263,12 @@ function moodleFileBrowser (field_name, url, type, win) {
     switch(type) {
         default:
         case 'file':
+        case 'media':
             cmsURL = '<?php echo "{$CFG->httpswwwroot}/lib/editor/tinymce/link.php?id={$courseid}"; ?>';
             width = 480;
             height = 400;
             break;
         case 'image':
-            cmsURL = '<?php echo "{$CFG->httpswwwroot}/lib/editor/tinymce/insert_image.php?id={$courseid}"; ?>';
-            width = 736;
-            height = 430;
-            break;
-        case 'media':
             cmsURL = '<?php echo "{$CFG->httpswwwroot}/lib/editor/tinymce/insert_image.php?id={$courseid}"; ?>';
             width = 736;
             height = 430;
