@@ -42,6 +42,13 @@ $tinymceplugins = array('safari',
                         'template', 
                         'inlinepopups');
 
+// Enable use of the dragmath plugin if it has been included in this installation.
+if (file_exists("{$CFG->dirroot}/lib/editor/tinymce/jscripts/tiny_mce/plugins/dragmath/editor_plugin.js")) {
+    $theme_advanced_buttons[1][] = MENU_SEPARATOR;
+    $theme_advanced_buttons[1][] = 'dragmath';
+    $tinymceplugins[] = 'dragmath';
+}
+
 // setup coversion table for swapping HTMLarea controls to TinyMCE controls
 $tinymcebuttonmap = array('fontname'             => 'fontselect', 
                           'fontsize'             => 'fontsizeselect', 
