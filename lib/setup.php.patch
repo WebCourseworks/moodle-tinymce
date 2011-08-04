@@ -1,0 +1,12 @@
+--- a/lib/setup.php
++++ b/lib/setup.php
+@@ -781,6 +781,9 @@ global $HTTPSPAGEREQUIRED;
+         }
+     }
+
++    // THIS MUST BE INCLUDED FOR TINYMCE TO WORK CORRECTLY.
++    require_once("{$CFG->libdir}/tinymcelib.php");
++
+ /// note: we can not block non utf-8 installatrions here, because empty mysql database
+ /// might be converted to utf-8 in admin/index.php during installation
+ ?>
