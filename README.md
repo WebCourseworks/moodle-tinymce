@@ -1,7 +1,7 @@
 Overview
 ========
 
-This is a drop in TinyMCE replacement for Moodle's HTMLArea WYSIWYG HTML editor developed by [Web Courseworks, Ltd.](http://www.webcourseworks.com).  This code has been tested with the stable version of Moodle 1.9.12 but should work on any installation of 1.9.  The TinyMCE editor will not appear in the Chrome or Safari web browsers unless your Moodle site is running 1.9.11 or later, or you've [patched your installation](https://github.com/moodle/moodle/commit/c476a2ec).
+This is a drop in TinyMCE replacement for Moodle's HTMLArea WYSIWYG HTML editor developed by [Web Courseworks, Ltd.](http://www.webcourseworks.com)  This code has been tested with the stable version of Moodle 1.9.12 but should work on any installation of 1.9.  The TinyMCE editor will not appear in the Chrome or Safari web browsers unless your Moodle site is running 1.9.11 or later, or you've [patched your installation](https://github.com/moodle/moodle/commit/c476a2ec).
 
 Installation
 ============
@@ -23,7 +23,7 @@ require_once("{$CFG->libdir}/tinymcelib.php");
 Dragmath Support
 ================
 
-Dragmath is supported by TinyMCE.  To install download the dragmath plugin and support files provided by  Mauno Korpelainen [http://korpelainen.net/dragmxx.zip](http://korpelainen.net/dragmxx.zip)].  Copy the included /lib/dragmath and /lib/editor/tinymce/jscripts/tiny_mce/plugins/dragmath directories into your installation.  There is no need to modify /lib/editor/tinymce/tinymcejs.php any longer.  The plugin will be automatically loaded into TinyMCE if it has been installed.
+Dragmath is supported by TinyMCE.  To install download the dragmath plugin and support files provided by  Mauno Korpelainen [http://korpelainen.net/dragmxx.zip](http://korpelainen.net/dragmxx.zip).  Copy the included /lib/dragmath and /lib/editor/tinymce/jscripts/tiny_mce/plugins/dragmath directories into your installation.  There is no need to modify /lib/editor/tinymce/tinymcejs.php any longer.  The plugin will be automatically loaded into TinyMCE if it has been installed.
 
 Known Issues
 ============
