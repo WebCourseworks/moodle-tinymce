@@ -95,8 +95,10 @@
                         switch(field) {
                             case "url" :
                                 //upper.document.getElementById('f_href').value = value;
-                                upper.opener.document.getElementById('f_href').value = value;
-                                upper.close();
+                                var pop = upper.tinyMCEPopup;
+                                var win = pop.getWindowArg("window");
+                                win.document.getElementById(pop.getWindowArg("input")).value = value;
+                                pop.close();
                                 break;
                             //case "imodified" : upper.document.getElementById('imodified').value = value; break;
                             //case "isize" : upper.document.getElementById('isize').value = value; break;
