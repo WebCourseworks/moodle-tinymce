@@ -32,3 +32,8 @@ TinyMCE is incompatible with the following Moodle customizations:
 
 * NanoGong
 * [HTMLAREA Editor custom plugin framework support](http://tracker.moodle.org/browse/CONTRIB-2730)
+
+Additional Contributors
+=======================
+
+* [Davo Smith](https://github.com/davosmith)
