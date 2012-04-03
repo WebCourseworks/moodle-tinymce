@@ -13,7 +13,7 @@ class TinyMCEScriptIterator implements ArrayAccess, Iterator   {
     
     // This array must be an empty array of the same length and value position as the array we'll return
     // via current() and offsetGet().  Need this for simple array operations and checks.
-    private $placeholder = array(0 => '', 1 => '');
+    private $placeholder = array(0 => '');
 
     public function __construct() {
         $this->position = 0;
@@ -64,9 +64,6 @@ class TinyMCEScriptIterator implements ArrayAccess, Iterator   {
 
         switch($index) {
             case 0:
-                $result = "{$CFG->httpswwwroot}/lib/editor/tinymce/jscripts/tiny_mce/tiny_mce.js";
-                break;
-            case 1:
                 $courseid = $COURSE->id;
                 if (!empty($courseid) and has_capability('moodle/course:managefiles', get_context_instance(CONTEXT_COURSE, $courseid))) {
                     $httpsrequired = empty($HTTPSPAGEREQUIRED) ? '' : '&amp;httpsrequired=1';
